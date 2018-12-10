@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{36246adb-61fe-4145-8db8-7b1dada431a6}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>1-1.py</StartupFile>
+    <StartupFile>7-2.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -30,6 +30,10 @@
     <Compile Include="5-2.py" />
     <Compile Include="6-1.py" />
     <Compile Include="6-2.py" />
+    <Compile Include="7-2.py" />
+    <Compile Include="7-1.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
 </Project>
