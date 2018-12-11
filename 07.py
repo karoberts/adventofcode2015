@@ -9,7 +9,7 @@ wires = {}
 inputs = {}
 ops = {}
 
-with open('7.txt' ) as file:
+with open('07.txt' ) as file:
     for line in (l.strip() for l in file):
 
         m = pat1.match(line)

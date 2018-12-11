@@ -22,7 +22,7 @@ def is_nice(s):
     return False
 
 
-with open('5.txt' ) as file:
+with open('05.txt' ) as file:
     c = 0
     for line in (l.strip() for l in file):
         if is_nice(line):

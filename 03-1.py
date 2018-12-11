@@ -5,7 +5,7 @@ pat = re.compile(r'^(\d+)x(\d+)x(\d+)$')
 def key(x, y):
     return str(x) + ',' + str(y)
 
-with open('3.txt' ) as file:
+with open('03.txt' ) as file:
     x = 0
     y = 0
     houses = {}

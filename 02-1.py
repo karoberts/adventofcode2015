@@ -3,7 +3,7 @@ import re
 pat = re.compile(r'^(\d+)x(\d+)x(\d+)$')
 
 tot = 0
-with open('2.txt' ) as file:
+with open('02.txt' ) as file:
     for line in (l.strip() for l in file):
         m = pat.match(line)
         l = int(m.group(1))

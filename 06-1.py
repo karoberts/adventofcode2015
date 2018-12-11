@@ -24,7 +24,7 @@ def apply(t,x1,y1,x2,y2):
 
 grid = {}
 
-with open('6.txt' ) as file:
+with open('06.txt' ) as file:
     for line in (l.strip() for l in file):
         print(line)
         m = pat1.match(line)

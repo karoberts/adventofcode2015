@@ -1,5 +1,5 @@
 
-with open('1.txt' ) as file:
+with open('01.txt' ) as file:
     line = file.readline().strip()
 
 floor = 0

@@ -42,7 +42,7 @@ def encode(line):
 #print(encode('"\\x27"'))
 #exit()
 
-with open('8.txt' ) as file:
+with open('08.txt' ) as file:
     code = 0
     string = 0
     for line in (l.strip() for l in file):
@@ -55,7 +55,7 @@ with open('8.txt' ) as file:
     
     orig = code
 
-with open('8.txt' ) as file:
+with open('08.txt' ) as file:
     code = 0
     string = 0
     for line in (l.strip() for l in file):

@@ -5,7 +5,7 @@ pat = re.compile(r'^([a-zA-Z]+) to ([a-zA-Z]+) = (\d+)$')
 mapping = {}
 places = set()
 
-with open('9.txt') as file:
+with open('09.txt') as file:
     for line in (l.strip() for l in file):
         m = pat.match(line)
         fr = m.group(1)

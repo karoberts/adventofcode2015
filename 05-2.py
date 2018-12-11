@@ -19,7 +19,7 @@ print(is_nice('xxyxx'))
 print(is_nice('uurcxstgmygtbstg'))
 print(is_nice('ieodomkazucvgmuy'))
 
-with open('5.txt' ) as file:
+with open('05.txt' ) as file:
     c = 0
     for line in (l.strip() for l in file):
         print(line, end='')

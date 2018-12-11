@@ -21,7 +21,7 @@ def go(x, y, c):
         y += 1
     return (x,y)
 
-with open('3.txt' ) as file:
+with open('03.txt' ) as file:
     rx = 0
     ry = 0
     sx = 0
