@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{36246adb-61fe-4145-8db8-7b1dada431a6}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>19-2-alt.py</StartupFile>
+    <StartupFile>19-2.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>

@@ -36,7 +36,7 @@ repls = sorted([
     ('P', 'PTi'),
     ('P', 'SiRnFAr'),
     ('Si', 'CaSi'),
-    #('Th', 'ThCa'),
+    ('Th', 'ThCa'),
     ('Ti', 'BP'),
     ('Ti', 'TiTi'),
     ('e', 'HF'),
@@ -79,6 +79,9 @@ def compare(s, st):
 def recur(curmol, steps):
     global min_steps
 
+    if steps >= 200:
+        return 9999999
+
     amts = []
     #if steps < 50:
     #print(steps, curmol)
@@ -91,20 +94,20 @@ def recur(curmol, steps):
     if len(unique_ones) % 10000 == 0:
         print(len(unique_ones), curmol)
 
-    samepos = compare(curmol, steps)
+    #samepos = compare(curmol, steps)
 
     possibles = []
     for r in repls:
         pos = curmol.find(r[0], 0)
         if pos == -1:
             continue
-        if r[1].startswith('CRn') and pos != 0:
-            continue
-        if samepos > -1 and pos < samepos:
-            continue
+        #if r[1].startswith('CRn') and pos != 0:
+        #    continue
+        #if samepos > -1 and pos < samepos:
+        #    continue
         replaced = curmol[:pos] + r[1] + curmol[pos+len(r[0]):]
-        cm = compare(replaced, steps + 1)
-        possibles.append((cm, pos, r, replaced))
+        #cm = compare(replaced, steps + 1)
+        possibles.append((pos, r, replaced))
         #print(steps, r[0], '->', r[1], '@', pos)
 
     if len(possibles) == 0:
@@ -112,7 +115,7 @@ def recur(curmol, steps):
 
     #print(possibles)
     z = 9
-    for p in sorted(possibles, key=lambda x:(x[0], x[1]), reverse=True):
+    for p in sorted(possibles, key=lambda x:(x[0], -x[1]), reverse=True):
         #print(steps, r, min_steps)
         pos = p[1]
         r = p[2]
