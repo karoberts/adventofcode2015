@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{36246adb-61fe-4145-8db8-7b1dada431a6}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>19-1.py</StartupFile>
+    <StartupFile>20-2.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -63,6 +63,10 @@
     <Compile Include="19-1.py" />
     <Compile Include="19-2-fail.py" />
     <Compile Include="19-2.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="20-2.py" />
+    <Compile Include="20-1.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
