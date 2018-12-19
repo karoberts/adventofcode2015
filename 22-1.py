@@ -78,6 +78,9 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
 
     indent = '  ' * depth
 
+    if cur_spend > min_mana_win:
+        return
+
     # start player turn
     if output:
         print(indent, '-- Player turn --')
@@ -91,8 +94,9 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
         me['hp'] -= hp_turn_cost
 
         if me['hp'] <= 0:
-            if output or outputLoss:
-                print(indent, ' @ player loses', 'boss =', new_boss['hp'])
+            if output:
+                print(indent, ' @ player loses', 'boss =', boss['hp'])
+            return
 
     new_cur_spells = inc_timer(cur_spells)
     spell_res = get_spells_res(new_cur_spells, indent)
@@ -101,9 +105,13 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
 
     # check for boss death
     if new_boss['hp'] <= 0:
-        if output:
+        if output or outputLoss:
             print(indent, ' ! boss loses', 'player =', me['hp'], 'spend =', cur_spend)
         manawins.append(cur_spend)
+        if cur_spend < min_mana_win:
+            min_mana_win = cur_spend
+            #print(indent, ' ! boss loses', 'player =', me['hp'], 'spend =', cur_spend)
+            print('new min', cur_spend)
         return
 
     if output:
@@ -112,7 +120,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
     cur_spend += next_spell['cost']
 
     if new_me['mana'] < 0:
-        if output or outputLoss:
+        if output:
             print(indent, ' @ player loses, no mana', 'boss =', new_boss['hp'], 'player =', new_me['hp'])
         return
 
@@ -129,6 +137,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
         manawins.append(cur_spend)
         if cur_spend < min_mana_win:
             min_mana_win = cur_spend
+            #print(indent, ' ! boss loses', 'player =', me['hp'], 'spend =', cur_spend)
             print('new min', cur_spend)
         return
 
@@ -150,6 +159,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
         manawins.append(cur_spend)
         if cur_spend < min_mana_win:
             min_mana_win = cur_spend
+            #print(indent, ' ! boss loses', 'player =', me['hp'], 'spend =', cur_spend)
             print('new min', cur_spend)
         return
 
@@ -159,7 +169,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
 
     # check for player death
     if new_me['hp'] <= 0:
-        if output or outputLoss:
+        if output:
             print(indent, ' @ player loses', 'boss =', new_boss['hp'])
         return
 
@@ -202,12 +212,10 @@ boss = {'hp': 55, 'mana': 0, 'armor': 0, 'damage': 8}
 hp_turn_cost = 0
 
 # part 2
-# hp_turn_cost = 1
+hp_turn_cost = 1
 
 output = False
 outputLoss = False
-
-# shield takes a long time!
 
 for next_sp in spells:
     print('starting with', next_sp)
