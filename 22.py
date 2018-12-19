@@ -58,7 +58,9 @@ def get_spell_res(sp, indent):
 
     return ret
 
-def apply_spells(sp, me, boss):
+def apply_spells(sp, me, boss, apply_hp_cost):
+    global hp_turn_cost
+
     new_me = dict(me)
     new_boss = dict(boss)
 
@@ -67,6 +69,9 @@ def apply_spells(sp, me, boss):
     new_me['armor'] = sp['armor']
 
     new_boss['hp'] -= sp['damage']
+
+    if apply_hp_cost and hp_turn_cost > 0:
+        new_me['hp'] -= hp_turn_cost
 
     return (new_me, new_boss)
 
@@ -88,20 +93,17 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
         print(indent, '- Boss has {} hit points'.format(boss['hp']))
 
     if hp_turn_cost > 0:
-        if output:
-            print(indent, 'Player loses', hp_turn_cost, 'hp')
-        me = dict(me)
-        me['hp'] -= hp_turn_cost
-
-        if me['hp'] <= 0:
+        if me['hp'] <= 1:
             if output:
                 print(indent, ' @ player loses', 'boss =', boss['hp'])
             return
 
     new_cur_spells = inc_timer(cur_spells)
+    if next_spell['t'] in new_cur_spells and new_cur_spells[next_spell['t']]['timer'] > 0:
+        return
     spell_res = get_spells_res(new_cur_spells, indent)
 
-    (new_me, new_boss) = apply_spells(spell_res, me, boss)
+    (new_me, new_boss) = apply_spells(spell_res, me, boss, True)
 
     # check for boss death
     if new_boss['hp'] <= 0:
@@ -128,7 +130,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
         new_cur_spells[next_spell['t']] = dict(next_spell)
     spell_res = get_spell_res(next_spell, indent)
 
-    (new_me, new_boss) = apply_spells(spell_res, new_me, new_boss)
+    (new_me, new_boss) = apply_spells(spell_res, new_me, new_boss, False)
 
     # check for boss death
     if new_boss['hp'] <= 0:
@@ -150,7 +152,7 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
     new_cur_spells = inc_timer(new_cur_spells)
     spell_res = get_spells_res(new_cur_spells, indent)
 
-    (new_me, new_boss) = apply_spells(spell_res, new_me, new_boss)
+    (new_me, new_boss) = apply_spells(spell_res, new_me, new_boss, False)
 
     # check for boss death
     if new_boss['hp'] <= 0:
@@ -175,18 +177,15 @@ def run_game(me, boss, next_spell, cur_spells, cur_spend, depth):
 
     # loop through spells not in new_cur_spells, call run_game for each
     for next_sp in spells:
-        if next_sp['t'] in new_cur_spells:
-            continue
-
         run_game(new_me, new_boss, next_sp, new_cur_spells, cur_spend, depth + 1)
 
 
 spells = []
-spells.append({'t': 'Poison', 'cost': 173, 'damage': 3, 'timer': 6, 'otimer': 6})
-spells.append({'t': 'Recharge', 'cost': 229, 'mana': 101, 'timer': 5, 'otimer': 5})
+spells.append({'t': 'Poison', 'cost': 173, 'damage': 3, 'timer': 6})
+spells.append({'t': 'Recharge', 'cost': 229, 'mana': 101, 'timer': 5})
+spells.append({'t': 'Sheild', 'cost': 113, 'armor': 7, 'timer': 6})
 spells.append({'t': 'Magic Missle', 'cost': 53, 'damage': 4})
 spells.append({'t': 'Drain', 'cost': 73, 'damage': 2, 'hp': 2})
-spells.append({'t': 'Sheild', 'cost': 113, 'armor': 7, 'timer': 6, 'otimer': 6})
 
 manawins = []
 min_mana_win = 999999999
