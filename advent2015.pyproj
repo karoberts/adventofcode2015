@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{36246adb-61fe-4145-8db8-7b1dada431a6}</ProjectGuid>
     <ProjectHome />
-    <StartupFile>23.py</StartupFile>
+    <StartupFile>24.py</StartupFile>
     <SearchPath />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -75,6 +75,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="23.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="24.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
