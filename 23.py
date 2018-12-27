@@ -25,7 +25,8 @@ with open('23.txt') as f:
         print(repr(op))
         program.append(op)
 
-regs = {'a': 0, 'b': 0}
+regs = {'a': 0, 'b': 0} # part 1
+# regs = {'a': 1, 'b': 0} # part2
 ip = 0
 stmts = 0
 while True:
@@ -59,4 +60,3 @@ while True:
         ip += 1
 
     print(' next ip={}, {}'.format(ip, regs))
-    z = 8
