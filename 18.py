@@ -40,10 +40,8 @@ def cycle():
 my = 100
 mx = 100
 
-#part 2
-fixed_on = set(['0,0', '99,0', '0,99', '99,99'])
 # part 1
-#fixed_on = set()
+fixed_on = set()
 
 with open('18.txt' ) as file:
     for y, line in enumerate(l.strip() for l in file):
@@ -53,9 +51,27 @@ with open('18.txt' ) as file:
         grid[f] = True
 
 for step in range(1, 101):
-    print(step)
+    #print(step)
     cycle()
     grid = nextgrid
     nextgrid = {}
 
-print(printit())
+print('part1', printit())
+
+#part 2
+fixed_on = set(['0,0', '99,0', '0,99', '99,99'])
+
+with open('18.txt' ) as file:
+    for y, line in enumerate(l.strip() for l in file):
+        for x, c in enumerate(line):
+            grid[key(x,y)] = True if c == '#' else False
+    for f in fixed_on:
+        grid[f] = True
+
+for step in range(1, 101):
+    #print(step)
+    cycle()
+    grid = nextgrid
+    nextgrid = {}
+
+print('part2', printit())

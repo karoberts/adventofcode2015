@@ -187,9 +187,6 @@ spells.append({'t': 'Sheild', 'cost': 113, 'armor': 7, 'timer': 6})
 spells.append({'t': 'Magic Missle', 'cost': 53, 'damage': 4})
 spells.append({'t': 'Drain', 'cost': 73, 'damage': 2, 'hp': 2})
 
-manawins = []
-min_mana_win = 999999999
-
 # boss
 # Hit Points: 55
 # Damage: 8
@@ -205,20 +202,34 @@ min_mana_win = 999999999
 # me = {'hp': 10, 'mana': 250, 'armor': 0, 'damage': 0}
 # boss = {'hp': 14, 'mana': 0, 'armor': 0, 'damage': 8}
 
+output = False
+outputLoss = False
+
 # part 1
 me = {'hp': 50, 'mana': 500, 'armor': 0, 'damage': 0}
 boss = {'hp': 55, 'mana': 0, 'armor': 0, 'damage': 8}
 hp_turn_cost = 0
 
-# part 2
-hp_turn_cost = 1
-
-output = False
-outputLoss = False
+manawins = []
+min_mana_win = 999999999
 
 for next_sp in spells:
     print('starting with', next_sp)
     run_game(me, boss, next_sp, {}, 0, 0)
 
 #print('manawins', manawins)
-print('manawins', min(manawins))
+print('part1, manawins', min(manawins))
+
+# part 2
+me = {'hp': 50, 'mana': 500, 'armor': 0, 'damage': 0}
+boss = {'hp': 55, 'mana': 0, 'armor': 0, 'damage': 8}
+hp_turn_cost = 1
+manawins = []
+min_mana_win = 999999999
+
+for next_sp in spells:
+    print('starting with', next_sp)
+    run_game(me, boss, next_sp, {}, 0, 0)
+
+#print('manawins', manawins)
+print('part2, manawins', min(manawins))

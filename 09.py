@@ -22,7 +22,7 @@ with open('09.txt') as file:
 
 totplaces = len(places)
 
-def tryit(fr, tos):
+def tryit(fr, tos, p):
     c = 0
     if fr not in mapping or len(tos) == totplaces:
         return c
@@ -32,26 +32,32 @@ def tryit(fr, tos):
             continue
         tosp = set(tos)
         tosp.add(to[0])
-        cs.append(to[1] + tryit(to[0], tosp))
+        cs.append(to[1] + tryit(to[0], tosp, p))
     if len(cs) == 0:
         return 0
-    # return min(cs) # part 1
-    return max(cs)
+    return min(cs) if p == 1 else max(cs)
 
 costs = {}
 
 for fr in mapping.keys():
     tos = set()
     tos.add(fr)
-    cost = tryit(fr, tos)
+    cost = tryit(fr, tos, 1)
     costs[fr] = cost
     #print(fr, cost, tos)
 
 print(costs)
-# minkey = min(costs, key=lambda x:costs[x]) # part 1
-# print(minkey)
-# print(costs[minkey])
+minkey = min(costs, key=lambda x:costs[x]) # part 1
+print('part1', minkey)
+print('part1', costs[minkey])
+
+costs = {}
+for fr in mapping.keys():
+    tos = set()
+    tos.add(fr)
+    cost = tryit(fr, tos, 2)
+    costs[fr] = cost
 
 maxkey = max(costs, key=lambda x:costs[x])
-print(maxkey)
-print(costs[maxkey])
+print('part2', maxkey)
+print('part2', costs[maxkey])

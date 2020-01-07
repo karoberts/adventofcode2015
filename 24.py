@@ -1,5 +1,7 @@
 import functools
 
+# finds answer nearly immediately, but will take forever to complete the search
+
 packages = [
     1,
     3,
@@ -33,7 +35,7 @@ packages = [
 
 # part 1 sum = 1548  each = 516
 
-# tgt = sum(packages) // 3 # part 1
+#tgt = sum(packages) // 3 # part 1
 tgt = sum(packages) // 4 # part 2
 minlen = 999999
 minent = 9999999999999999

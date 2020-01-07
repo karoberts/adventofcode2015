@@ -14,13 +14,6 @@ with open('13.txt' ) as file:
 
         mapping[m.group(1)][m.group(4)] = (1 if m.group(2) == 'gain' else -1) * int(m.group(3))
 
-# part 2
-for a in attendees:
-    mapping[a]['me'] = 0
-    mapping['me'][a] = 0
-attendees.add('me')
-# part 2
-
 def tryit(fr, tos, order, cost):
     cs = []
     for to, m in mapping[fr].items():
@@ -50,5 +43,29 @@ for fr in mapping.keys():
 print(costs)
 
 maxkey = max(costs, key=lambda x:costs[x])
-print(maxkey)
-print(costs[maxkey])
+print('part1', maxkey)
+print('part1', costs[maxkey])
+
+costs = {}
+
+
+# part 2
+for a in attendees:
+    mapping[a]['me'] = 0
+    mapping['me'][a] = 0
+attendees.add('me')
+# part 2
+
+for fr in mapping.keys():
+    tos = set()
+    tos.add(fr)
+    order = [fr]
+    cost = tryit(fr, tos, order, 0)
+    costs[fr] = cost
+    #print(fr, cost, tos)
+
+print(costs)
+
+maxkey = max(costs, key=lambda x:costs[x])
+print('part2', maxkey)
+print('part2', costs[maxkey])
