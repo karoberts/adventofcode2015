@@ -6,8 +6,8 @@ pub fn _run()
     let (mut x, mut y) = (0, 0);
     let (mut rx, mut ry) = (0, 0);
     let (mut sx, mut sy) = (0, 0);
-    let mut houses: HashMap<String, i32> = HashMap::new();
-    let mut houses2: HashMap<String, i32> = HashMap::new();
+    let mut houses: HashMap<(i32, i32), i32> = HashMap::new();
+    let mut houses2: HashMap<(i32, i32), i32> = HashMap::new();
 
     let contents = fs::read_to_string("../03.txt").expect("03.txt");
 
@@ -16,18 +16,15 @@ pub fn _run()
 
     for (i, c) in contents.trim().chars().enumerate()
     {
-        let k = format!("{},{}", x, y);
-        *houses.entry(k).or_insert(0) += 1;
+        *houses.entry((x,y)).or_insert(0) += 1;
 
         if i % 2 == 0 {
-            let sk = format!("{},{}", sx, sy);
-            *houses2.entry(sk).or_insert(0) += 1;
+            *houses2.entry((sx, sy)).or_insert(0) += 1;
             p_x = &mut sx;
             p_y = &mut sy;
         }
         else {
-            let rk = format!("{},{}", rx, ry);
-            *houses2.entry(rk).or_insert(0) += 1;
+            *houses2.entry((rx, ry)).or_insert(0) += 1;
             p_x = &mut rx;
             p_y = &mut ry;
         }
