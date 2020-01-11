@@ -1,12 +1,7 @@
 import re
 
-pat = re.compile(r'^(\d+)x(\d+)x(\d+)$')
-
-def key(x, y):
-    return str(x) + ',' + str(y)
-
 def go(x, y, c):
-    k = key(x,y)
+    k = (x,y)
     if k not in houses:
         houses[k] = 0
     houses[k] += 1
@@ -34,10 +29,5 @@ with open('03.txt' ) as file:
         else:
             (rx, ry) = go(rx, ry, c)
         w += 1
-
-if w % 2 == 0:
-    (sx, sy) = go(sx, sy, c)
-else:
-    (rx, ry) = go(rx, ry, c)
 
 print(len(houses))
