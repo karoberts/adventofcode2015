@@ -1,5 +1,5 @@
 use std::env;
-use std::time::{Instant};
+use std::time::{Instant, Duration};
 
 mod utils;
 
@@ -18,12 +18,16 @@ fn main()
         day25::_run];
 
     if args.len() > 1 && args[1] == "all" {
+        let mut total: Duration = Duration::from_secs(0);
         for f in funcs {
             let start = Instant::now();
             f();
             let duration = start.elapsed();
+            total += duration;
             println!("  ==> {:?}", duration);
         }
+        println!();
+        println!("  TOTAL: {:?}", total);
     }
     else {
         let start = Instant::now();
