@@ -7,6 +7,7 @@ mod day01;
 mod day02;
 mod day03;
 mod day04;
+mod day05;
 mod day25;
 
 fn main() 
@@ -17,6 +18,7 @@ fn main()
         day02::_run, 
         day03::_run, 
         day04::_run, 
+        day05::_run, 
         day25::_run];
 
     if args.len() > 1 && args[1] == "all" {
@@ -34,7 +36,7 @@ fn main()
     else {
         let start = Instant::now();
 
-        day04::_run();
+        day05::_run();
 
         let duration = start.elapsed();
         println!(" ==> {:?}", duration);

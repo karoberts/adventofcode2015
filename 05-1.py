@@ -1,6 +1,3 @@
-import re
-
-pat = re.compile(r'^(\d+)x(\d+)x(\d+)$')
 
 def is_nice(s):
     for bad in ['ab', 'cd', 'pq', 'xy']:
