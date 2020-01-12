@@ -2,13 +2,13 @@ use std::collections::HashMap;
 
 use super::utils;
 
-fn is_nice(chars:&Vec<char>) -> (bool, bool) {
+fn is_nice(chars:&Vec<char>, pairs:&mut HashMap<(char,char), usize>) -> (bool, bool) {
 
     let mut vowel = 0;
     let mut found_double = false;
     let mut part1_notnice = false;
 
-    let mut pairs : HashMap<(char, char), usize> = HashMap::new();
+    //let mut pairs : HashMap<(char, char), usize> = HashMap::new();
     let mut found_yny = false;
     let mut found_pair = false;
 
@@ -62,11 +62,14 @@ pub fn _run()
     let mut part1 = 0;
     let mut part2 = 0;
 
+    let mut hmap: HashMap<(char, char), usize> = HashMap::with_capacity(20);
+
     let lines = utils::read_lines("../05.txt").expect("05.txt");
     for line in lines.map(|s| s.expect("fail")) {
         let chars : Vec<char> = line.chars().collect();
 
-        let ret = is_nice(&chars);
+        hmap.clear();
+        let ret = is_nice(&chars, &mut hmap);
 
         if ret.0 {
             part1 += 1;
