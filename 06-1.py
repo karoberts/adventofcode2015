@@ -26,7 +26,7 @@ grid = {}
 
 with open('06.txt' ) as file:
     for line in (l.strip() for l in file):
-        print(line)
+        #print(line)
         m = pat1.match(line)
         if m is not None:
             apply(1, int(m.group(1)),int(m.group(2)),int(m.group(3)),int(m.group(4)))
