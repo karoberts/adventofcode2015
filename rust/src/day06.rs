@@ -1,20 +1,23 @@
 use regex::Regex;
-use std::collections::HashMap;
 
 use super::utils;
 
-fn apply(grid1:&mut HashMap<(i32,i32), bool>, grid2:&mut HashMap<(i32,i32), i32>, cap:&regex::Captures, mode:&str)
+const D: usize = 1000;
+
+type TGrid1 = [[bool; D]; D];
+type TGrid2 = [[i32; D]; D];
+
+fn apply(grid1:&mut TGrid1, grid2:&mut TGrid2, cap:&regex::Captures, mode:&str)
 {
-    let x1 = utils::cap_to::<i32>(cap.get(1));
-    let y1 = utils::cap_to::<i32>(cap.get(2));
-    let x2 = utils::cap_to::<i32>(cap.get(3));
-    let y2 = utils::cap_to::<i32>(cap.get(4));
+    let x1 = utils::cap_to::<usize>(cap.get(1));
+    let y1 = utils::cap_to::<usize>(cap.get(2));
+    let x2 = utils::cap_to::<usize>(cap.get(3));
+    let y2 = utils::cap_to::<usize>(cap.get(4));
 
     for y in y1..y2+1 {
         for x in x1..x2+1 {
-            let k = (x,y);
-            let v1 = grid1.entry(k).or_insert(false);
-            let v2 = grid2.entry(k).or_insert(0);
+            let v1 = &mut grid1[x][y];
+            let v2 = &mut grid2[x][y];
             match mode {
                 "on" => {
                     *v1 = true;
@@ -40,8 +43,8 @@ pub fn _run()
     let pat2 = Regex::new(r"^toggle (\d+),(\d+) through (\d+),(\d+)$").unwrap();
     let pat3 = Regex::new(r"^turn off (\d+),(\d+) through (\d+),(\d+)$").unwrap();
 
-    let mut map1 : HashMap<(i32,i32), bool> = HashMap::new();
-    let mut map2 : HashMap<(i32,i32), i32> = HashMap::new();
+    let mut map1 = [[false; D] ; D];
+    let mut map2 = [[0i32; D] ; D];
 
     let lines = utils::read_lines("../06.txt").expect("06.txt");
     for line in lines.map(|s| s.expect("fail")) {
@@ -66,8 +69,17 @@ pub fn _run()
         panic!(format!("didn't match {}", line));
     }
 
-    let part1 = map1.iter().filter(|&(_,v)| *v).count();
-    let part2 = map2.iter().map(|(_,v)| *v).sum::<i32>();
+    let mut part1 = 0;
+    let mut part2 = 0;
+
+    for y in 0..D {
+        for x in 0..D {
+            if map1[x][y] {
+                part1 += 1;
+            }
+            part2 += map2[x][y];
+        }
+    }
 
     println!("day05-1: {}", part1);
     println!("day05-2: {}", part2);
