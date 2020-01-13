@@ -2,6 +2,16 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
+/// allows for concise hashmap construction
+/// like this: hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
+macro_rules! hashmap {
+    ($( $key: expr => $val: expr ),*) => {{
+         let mut map = ::std::collections::HashMap::new();
+         $( map.insert($key, $val); )*
+         map
+    }}
+}
+
 /// read a file and return an iterator of lines
 pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P: AsRef<Path>, 
 {
