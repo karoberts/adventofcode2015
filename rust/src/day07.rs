@@ -42,28 +42,28 @@ fn exec(wires: &WireMap, op: &Op) -> Option<i32>
 
 fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap) 
 {
-    while ops.len() > 0
-    {
-        let mut opdone = false;
+    let mut done : HashSet<usize> = HashSet::new();
 
-        for w in wires.keys() {
-            if ! inputs.contains_key(w) && ! ops.contains_key(w) {
-                for (_, s) in inputs.iter_mut() {
-                    if s.contains(w) {
-                        //println!("{} remove {} from {}", clock, w, i);
-                        s.remove(w);
-                    }
+    for w in wires.keys() {
+        if ! inputs.contains_key(w) && ! ops.contains_key(w) {
+            for (_, s) in inputs.iter_mut() {
+                if s.contains(w) {
+                    //println!("{} remove {} from {}", clock, w, i);
+                    s.remove(w);
                 }
             }
         }
+    }
 
+    while ops.len() > 0
+    {
         let keys: Vec<String> = wires.keys().map(|s| s.clone()).collect();
         for w in keys {
             if ! ops.contains_key(&w) {
                 continue;
             }
 
-            let mut done : HashSet<usize> = HashSet::new();
+            done.clear();
 
             for (i, op) in ops.get(&w).unwrap().iter().enumerate() {
                 if ops.contains_key(&op.left) {
@@ -72,7 +72,6 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
                 
                 if op.right.is_none() || !ops.contains_key(&op.right.clone().unwrap()) {
                     //println!("{} exec {} {{'op': '{}', 'left': '{}' 'right': {:?}", clock, w, op.op, op.left, op.right);
-                    opdone = true;
                     let ret = exec(&wires, op);
                     wires.insert(w.clone(), ret);
                     done.insert(i);
@@ -93,10 +92,6 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             else {
                 ops.insert(w.clone(), leftover);
             }
-        }
-
-        if ! opdone {
-            break;
         }
     }
 }
