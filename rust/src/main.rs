@@ -11,6 +11,7 @@ mod day03;
 mod day04;
 mod day05;
 mod day06;
+mod day07;
 mod day25;
 
 fn run_timer(f : fn())
@@ -33,6 +34,7 @@ fn main()
         "4".to_string() => day04::_run,
         "5".to_string() => day05::_run,
         "6".to_string() => day06::_run,
+        "7".to_string() => day07::_run,
         "25".to_string() => day25::_run
     ];
 
@@ -61,6 +63,6 @@ fn main()
         }
     }
     else {
-        run_timer( day06::_run );
+        run_timer( day07::_run );
     }
 }

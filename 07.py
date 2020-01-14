@@ -93,7 +93,7 @@ def exec(w, op):
         wires[w] = wires[l] >> ri
     pass
 
-for clock in range(0, 100):
+while len(ops) > 0:
     opdone = False
     wiresat = False
     for w in wires:
@@ -101,7 +101,7 @@ for clock in range(0, 100):
             wiresat = True
             for i in inputs:
                 if w in inputs[i]:
-                    print(clock, 'remove', w, 'from', i)
+                    #print(clock, 'remove', w, 'from', i)
                     inputs[i].remove(w)
 
     for w in wires:
@@ -111,7 +111,7 @@ for clock in range(0, 100):
                 left = op['left']
                 right = op['right']
                 if left not in ops and (right is None or right not in ops):
-                    print(clock, 'exec', w, op)
+                    #print(clock, 'exec', w, op)
                     opdone = True
                     exec(w, op)
                     done.add(i)
@@ -131,5 +131,5 @@ for clock in range(0, 100):
 
 #print(wires)
 #print(inputs)
-print(ops)
+#print(ops)
 print(wires['a'])
