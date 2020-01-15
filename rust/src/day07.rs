@@ -72,8 +72,7 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
                 
                 if op.right.is_none() || !ops.contains_key(&op.right.clone().unwrap()) {
                     //println!("{} exec {} {{'op': '{}', 'left': '{}' 'right': {:?}", clock, w, op.op, op.left, op.right);
-                    let ret = exec(&wires, op);
-                    wires.insert(w.clone(), ret);
+                    *wires.get_mut(&w).unwrap() = exec(&wires, op);
                     done.insert(i);
                 }
             }
@@ -90,7 +89,7 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
                 ops.remove(&w);
             }
             else {
-                ops.insert(w.clone(), leftover);
+                *ops.get_mut(&w).unwrap() = leftover;
             }
         }
     }
@@ -179,7 +178,7 @@ pub fn _run()
 
     read_input(&mut wires, &mut inputs, &mut ops);
 
-    wires.insert("b".to_owned(), Some(wire_a));
+    *wires.get_mut("b").unwrap() = Some(wire_a);
 
     runit(&mut wires, &mut inputs, &mut ops);
 
