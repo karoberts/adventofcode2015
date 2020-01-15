@@ -7,8 +7,8 @@ use super::utils;
 struct Op
 {
     op : String,
-    left : String,
-    right : Option<String>
+    left : Result<String, i32>,
+    right : Option<Result<String, i32>>
 }
 
 type WireMap = HashMap<String, Option<i32>>;
@@ -17,25 +17,26 @@ type OpMap = HashMap<String, Vec<Op>>;
 
 fn exec(wires: &WireMap, op: &Op) -> Option<i32>
 {
-    let ldig = op.left.parse::<i32>().ok();
-    let rdig = if op.right.is_none() { None } else { op.right.clone().unwrap().parse::<i32>().ok() };
+    let wl: i32 = match &op.left {
+        Ok(left) => wires.get(left).unwrap().unwrap(),
+        Err(left) => *left
+    };
 
-    let mut wl: Option<i32> = None;
-    if ldig.is_none() {
-        wl = *wires.get(&op.left).unwrap();
-    }
-    let mut wr: Option<i32> = None;
-    if rdig.is_none() {
-        wr = *wires.get(&op.right.clone().unwrap_or(String::from("--"))).unwrap_or(&Some(0));
+    let mut wr: i32 = 0;
+    if let Some(rv) = &op.right {
+        wr = match &rv {
+            Ok(right) => wires.get(right).unwrap().unwrap(),
+            Err(right) => *right
+        };
     }
 
     match op.op.as_str() {
-        "SEND" => return ldig.or(wl),
-        "NOT" => return Some(! wl.unwrap_or(0)),
-        "AND" => return Some(ldig.or(wl).unwrap_or(0) & rdig.or(wr).unwrap()),
-        "OR" => return Some(ldig.or(wl).unwrap_or(0) | rdig.or(wr).unwrap()),
-        "LSHIFT" => return Some(wl.unwrap_or(0) << rdig.unwrap()),
-        "RSHIFT" => return Some(wl.unwrap_or(0) >> rdig.unwrap()),
+        "SEND" => return Some(wl),
+        "NOT" => return Some(! wl),
+        "AND" => return Some(wl & wr),
+        "OR" => return Some(wl | wr),
+        "LSHIFT" => return Some(wl << wr),
+        "RSHIFT" => return Some(wl >> wr),
         _ => panic!("bad op: {}", op.op)
     }
 }
@@ -66,16 +67,29 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             done.clear();
 
             for (i, op) in ops.get(&w).unwrap().iter().enumerate() {
-                if ops.contains_key(&op.left) {
-                    continue;
+                if let Ok(left) = &op.left {
+                    if ops.contains_key(left) {
+                        continue;
+                    }
                 }
+
+                let apply = match &op.right {
+                    Some(rv) => {
+                        match rv {
+                            Ok(right) => ! ops.contains_key(right),
+                            _ => true
+                        }
+                    },
+                    _ => true
+                };
                 
-                if op.right.is_none() || !ops.contains_key(&op.right.clone().unwrap()) {
-                    //println!("{} exec {} {{'op': '{}', 'left': '{}' 'right': {:?}", clock, w, op.op, op.left, op.right);
-                    *wires.get_mut(&w).unwrap() = exec(&wires, op);
+                if apply {
+                    *wires.get_mut(&w).unwrap() = exec(&wires, &op);
                     done.insert(i);
                 }
             }
+
+            //println!("done = {:?}", done);
 
             let mut leftover : Vec<Op> = Vec::new();
             for (i, op) in ops.get(&w).unwrap().iter().enumerate() {
@@ -113,13 +127,23 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             wires.entry(g1.clone()).or_insert(None);
             wires.entry(g4.clone()).or_insert(None);
             inputs.entry(g4.clone()).or_insert( HashSet::new() );
-            if g1.parse::<i32>().is_err() {
+            let left : Result<String, i32>;
+            let right : Option<Result<String, i32>>;
+            if let Ok(g1int) = g1.parse::<i32>() {
+                left = Err(g1int);
+            }
+            else {
+                left = Ok(g1.clone());
                 inputs.entry(g4.clone()).or_insert( HashSet::new() ).insert(g1.clone());
             }
-            if g3.parse::<i32>().is_err() {
+            if let Ok(g3int) = g3.parse::<i32>() {
+                right = Some(Err(g3int));
+            }
+            else {
+                right = Some(Ok(g3.clone()));
                 inputs.entry(g4.clone()).or_insert( HashSet::new() ).insert(g3.clone());
             }
-            ops.entry(g4).or_insert(Vec::new()).push(Op { op: g2.clone(), left: g1.clone(), right: Some(g3.clone())});
+            ops.entry(g4.clone()).or_insert(Vec::new()).push(Op { op: g2.clone(), left: left, right: right});
             continue;
         }
 
@@ -131,7 +155,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             wires.entry(g2.clone()).or_insert(None);
             let i = inputs.entry(g2.clone()).or_insert( HashSet::new() );
             i.insert(g1.clone());
-            ops.entry(g2.clone()).or_insert(Vec::new()).push(Op { op: "NOT".to_owned(), left: g1.clone(), right: None});
+            ops.entry(g2.clone()).or_insert(Vec::new()).push(Op { op: "NOT".to_owned(), left: Ok(g1.clone()), right: None});
             continue;
         }
 
@@ -151,7 +175,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             wires.entry(g2.clone()).or_insert(None);
             let i = inputs.entry(g2.clone()).or_insert( HashSet::new() );
             i.insert(g1.clone());
-            ops.entry(g2).or_insert(Vec::new()).push(Op { op: "SEND".to_owned(), left: g1.clone(), right: None });
+            ops.entry(g2.clone()).or_insert(Vec::new()).push(Op { op: "SEND".to_owned(), left: Ok(g1.clone()), right: None });
             continue;
         }
 
