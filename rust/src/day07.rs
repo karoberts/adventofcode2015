@@ -66,7 +66,8 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
 
             done.clear();
 
-            for (i, op) in ops.get(&w).unwrap().iter().enumerate() {
+            let olist = ops.get(&w).unwrap();
+            for (i, op) in olist.iter().enumerate() {
                 if let Ok(left) = &op.left {
                     if ops.contains_key(left) {
                         continue;
@@ -91,18 +92,19 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
 
             //println!("done = {:?}", done);
 
-            let mut leftover : Vec<Op> = Vec::new();
-            for (i, op) in ops.get(&w).unwrap().iter().enumerate() {
-                if done.contains(&i) {
-                    continue;
-                }
-                leftover.push(op.clone());
-            }
-
-            if leftover.is_empty() {
+            if done.len() == olist.len() {
                 ops.remove(&w);
             }
-            else {
+            else
+            {
+                let mut leftover : Vec<Op> = Vec::new();
+                for (i, op) in olist.iter().enumerate() {
+                    if done.contains(&i) {
+                        continue;
+                    }
+                    leftover.push(op.clone());
+                }
+
                 *ops.get_mut(&w).unwrap() = leftover;
             }
         }
