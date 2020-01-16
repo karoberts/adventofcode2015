@@ -92,7 +92,10 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
 
             //println!("done = {:?}", done);
 
-            if done.len() == olist.len() {
+            if done.len() == 0 {
+                continue;
+            }
+            else if done.len() == olist.len() {
                 ops.remove(&w);
             }
             else
