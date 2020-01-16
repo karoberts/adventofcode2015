@@ -1,5 +1,6 @@
+extern crate fnv;
+
 use regex::Regex;
-use std::collections::{HashMap,HashSet};
 
 use super::utils;
 
@@ -11,9 +12,9 @@ struct Op
     right : Option<Result<String, i32>>
 }
 
-type WireMap = HashMap<String, Option<i32>>;
-type InputMap = HashMap<String, HashSet<String>>;
-type OpMap = HashMap<String, Vec<Op>>;
+type WireMap = utils::HashMapFnv<String, Option<i32>>;
+type InputMap = utils::HashMapFnv<String, utils::HashSetFnv<String>>;
+type OpMap = utils::HashMapFnv<String, Vec<Op>>;
 
 fn exec(wires: &WireMap, op: &Op) -> Option<i32>
 {
@@ -43,7 +44,7 @@ fn exec(wires: &WireMap, op: &Op) -> Option<i32>
 
 fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap) 
 {
-    let mut done : HashSet<usize> = HashSet::new();
+    let mut done : utils::HashSetFnv<usize> = utils::HashSetFnv::default();
 
     for w in wires.keys() {
         if ! inputs.contains_key(w) && ! ops.contains_key(w) {
@@ -100,7 +101,7 @@ fn runit(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             }
             else
             {
-                let mut leftover : Vec<Op> = Vec::new();
+                let mut leftover : Vec<Op> = Vec::with_capacity(olist.len() - done.len());
                 for (i, op) in olist.iter().enumerate() {
                     if done.contains(&i) {
                         continue;
@@ -131,7 +132,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             let g4 = cap.get(4).unwrap().as_str().to_owned();
             wires.entry(g1.clone()).or_insert(None);
             wires.entry(g4.clone()).or_insert(None);
-            inputs.entry(g4.clone()).or_insert( HashSet::new() );
+            inputs.entry(g4.clone()).or_insert( utils::HashSetFnv::default() );
             let left : Result<String, i32>;
             let right : Option<Result<String, i32>>;
             if let Ok(g1int) = g1.parse::<i32>() {
@@ -139,14 +140,14 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             }
             else {
                 left = Ok(g1.clone());
-                inputs.entry(g4.clone()).or_insert( HashSet::new() ).insert(g1.clone());
+                inputs.entry(g4.clone()).or_insert( utils::HashSetFnv::default() ).insert(g1.clone());
             }
             if let Ok(g3int) = g3.parse::<i32>() {
                 right = Some(Err(g3int));
             }
             else {
                 right = Some(Ok(g3.clone()));
-                inputs.entry(g4.clone()).or_insert( HashSet::new() ).insert(g3.clone());
+                inputs.entry(g4.clone()).or_insert( utils::HashSetFnv::default() ).insert(g3.clone());
             }
             ops.entry(g4.clone()).or_insert(Vec::new()).push(Op { op: g2.clone(), left: left, right: right});
             continue;
@@ -158,7 +159,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             let g2 = cap.get(2).unwrap().as_str().to_owned();
             wires.entry(g1.clone()).or_insert(None);
             wires.entry(g2.clone()).or_insert(None);
-            let i = inputs.entry(g2.clone()).or_insert( HashSet::new() );
+            let i = inputs.entry(g2.clone()).or_insert( utils::HashSetFnv::default() );
             i.insert(g1.clone());
             ops.entry(g2.clone()).or_insert(Vec::new()).push(Op { op: "NOT".to_owned(), left: Ok(g1.clone()), right: None});
             continue;
@@ -178,7 +179,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             let g2 = cap.get(2).unwrap().as_str().to_owned();
             wires.entry(g1.clone()).or_insert(None);
             wires.entry(g2.clone()).or_insert(None);
-            let i = inputs.entry(g2.clone()).or_insert( HashSet::new() );
+            let i = inputs.entry(g2.clone()).or_insert( utils::HashSetFnv::default() );
             i.insert(g1.clone());
             ops.entry(g2.clone()).or_insert(Vec::new()).push(Op { op: "SEND".to_owned(), left: Ok(g1.clone()), right: None });
             continue;
@@ -190,9 +191,9 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
 
 pub fn _run() 
 {
-    let mut wires : WireMap = HashMap::new();
-    let mut inputs : InputMap = HashMap::new();
-    let mut ops : OpMap = HashMap::new();
+    let mut wires : WireMap = utils::HashMapFnv::default();
+    let mut inputs : InputMap = utils::HashMapFnv::default();
+    let mut ops : OpMap = utils::HashMapFnv::default();
 
     read_input(&mut wires, &mut inputs, &mut ops);
 

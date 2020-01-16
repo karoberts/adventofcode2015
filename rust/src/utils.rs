@@ -2,6 +2,13 @@ use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
 
+use std::collections::{HashMap,HashSet};
+use std::hash::BuildHasherDefault;
+use fnv::FnvHasher;
+
+pub type HashSetFnv<K> = HashSet<K, BuildHasherDefault<FnvHasher>>;
+pub type HashMapFnv<K, V> = HashMap<K, V, BuildHasherDefault<FnvHasher>>;
+
 /// allows for concise hashmap construction
 /// like this: hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
 macro_rules! hashmap {
