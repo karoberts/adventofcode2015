@@ -26,11 +26,11 @@ fn tryit(fr:&String, tos:&mut TosType, mapping:&MappingType, totplaces:usize, p:
         cs.push(r);
     }
 
-    if cs.len() == 0 {
-        return 0;
+    match cs.len() {
+        0 => 0,
+        1 => cs[0],
+        _ => if p == 1 { *cs.iter().min().unwrap() } else { *cs.iter().max().unwrap() } 
     }
-
-    return if p == 1 { *cs.iter().min().unwrap() } else { *cs.iter().max().unwrap() }
 }
 
 pub fn _run()
