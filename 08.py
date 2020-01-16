@@ -49,7 +49,7 @@ with open('08.txt' ) as file:
         r = calc(line)
         code += r[0]
         string += r[1]
-        #print('cs', code, string)
+        #print(code, string, line)
 
     print('part1', code - string)
     
