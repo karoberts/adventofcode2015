@@ -1,13 +1,13 @@
 use std::fs;
-use std::collections::HashMap;
+use super::utils;
 
 pub fn _run() 
 {
     let (mut x, mut y) = (0, 0);
     let (mut rx, mut ry) = (0, 0);
     let (mut sx, mut sy) = (0, 0);
-    let mut houses: HashMap<(i32, i32), i32> = HashMap::new();
-    let mut houses2: HashMap<(i32, i32), i32> = HashMap::new();
+    let mut houses: utils::HashMapFnv<(i32, i32), i32> = utils::HashMapFnv::default();
+    let mut houses2: utils::HashMapFnv<(i32, i32), i32> = utils::HashMapFnv::default();
 
     let contents = fs::read_to_string("../03.txt").expect("03.txt");
 

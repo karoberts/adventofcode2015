@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use super::utils;
 
-fn is_nice(chars:&Vec<char>, pairs:&mut HashMap<(char,char), usize>) -> (bool, bool) {
+fn is_nice(chars:&Vec<char>, pairs:&mut utils::HashMapFnv<(char,char), usize>) -> (bool, bool) {
 
     let mut vowel = 0;
     let mut found_double = false;
@@ -62,7 +60,7 @@ pub fn _run()
     let mut part1 = 0;
     let mut part2 = 0;
 
-    let mut hmap: HashMap<(char, char), usize> = HashMap::with_capacity(20);
+    let mut hmap: utils::HashMapFnv<(char, char), usize> = utils::HashMapFnv::default();
 
     let lines = utils::read_lines("../05.txt").expect("05.txt");
     for line in lines.map(|s| s.expect("fail")) {

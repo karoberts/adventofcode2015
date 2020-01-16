@@ -6,11 +6,13 @@ use std::collections::{HashMap,HashSet};
 use std::hash::BuildHasherDefault;
 use fnv::FnvHasher;
 
+/// these are 2x the speed of the default
 pub type HashSetFnv<K> = HashSet<K, BuildHasherDefault<FnvHasher>>;
 pub type HashMapFnv<K, V> = HashMap<K, V, BuildHasherDefault<FnvHasher>>;
 
 /// allows for concise hashmap construction
 /// like this: hashmap!['A' => 0, 'C' => 0, 'G' => 0, 'T' => 0];
+/*
 macro_rules! hashmap {
     ($( $key: expr => $val: expr ),*) => {{
          let mut map = ::std::collections::HashMap::new();
@@ -18,6 +20,7 @@ macro_rules! hashmap {
          map
     }}
 }
+*/
 
 /// read a file and return an iterator of lines
 pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> where P: AsRef<Path>, 
