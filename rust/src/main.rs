@@ -1,6 +1,7 @@
 use std::env;
 use std::time::{Instant, Duration};
 
+#[macro_use]
 mod utils;
 
 mod day01;
@@ -11,6 +12,7 @@ mod day05;
 mod day06;
 mod day07;
 mod day08;
+mod day09;
 mod day25;
 
 fn run_timer(f : fn()) -> Duration
@@ -36,8 +38,9 @@ fn main()
         Some(day06::_run),
         Some(day07::_run),
         Some(day08::_run),
+        Some(day09::_run),
 
-        None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 
+        None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 
 
         Some(day25::_run)
     ];
@@ -58,6 +61,6 @@ fn main()
         }
     }
     else {
-        run_timer( day08::_run );
+        run_timer( day09::_run );
     }
 }

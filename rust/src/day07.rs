@@ -1,5 +1,3 @@
-extern crate fnv;
-
 use regex::Regex;
 
 use super::utils;
