@@ -4,9 +4,11 @@ use super::utils;
 
 fn isvalid(s:&Vec<char>) -> bool
 {
-    let chars = utils::HashSetFnv::from_iter(s.iter().clone());
-    if chars.contains(&'i') || chars.contains(&'o') || chars.contains(&'l') {
-        return false;
+    for c in s {
+        match c {
+            'i' | 'o' | 'l' => return false,
+            _ => ()
+        }
     }
 
     let mut pairs : utils::HashSetFnv<char> = fastset!();
@@ -65,12 +67,13 @@ fn incpass(s:&Vec<char>) -> Vec<char>
 fn nextpass(s:&Vec<char>) -> Vec<char>
 {
     let mut n : Vec<char> = s.clone();
+    let mut x : Vec<char>;
     loop {
-        let x = incpass(&n);
+        x = incpass(&n);
         if isvalid(&x) {
             return x.clone();
         }
-        n = x.clone();
+        n = x;
     }
 }
 
