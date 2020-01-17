@@ -11,3 +11,4 @@ regex = "1"
 rust-crypto = "0.2.36"
 fnv = "1.0.6"
 arrayvec = "0.5.1"                   # A vector with fixed capacity, backed by an array (it can be stored on the stack too). Impl…
+json = "0.12.1"                           # JSON implementation in Rust
