@@ -1,8 +1,7 @@
 use std::iter::FromIterator;
+use arrayvec::ArrayVec;
 
-use super::utils;
-
-fn isvalid(s:&Vec<char>) -> bool
+fn isvalid(s:&[char; 8]) -> bool
 {
     for c in s {
         match c {
@@ -11,16 +10,21 @@ fn isvalid(s:&Vec<char>) -> bool
         }
     }
 
-    let mut pairs : utils::HashSetFnv<char> = fastset!();
+    let mut pairs = [false; 26];
     let mut i : usize = 0;
+    let mut npairs = 0;
     while i < s.len() - 1 {
         if s[i] == s[i+1] {
             i += 1;
-            pairs.insert(s[i]);
+            let idx = (s[i] as u8 - 'a' as u8) as usize;
+            if !pairs[idx] {
+                pairs[idx] = true;
+                npairs += 1;
+            }
         }
         i += 1
     }
-    if pairs.len() < 2 {
+    if npairs < 2 {
         return false;
     }
 
@@ -44,10 +48,13 @@ fn isvalid(s:&Vec<char>) -> bool
     return false;
 }
 
-fn incpass(s:&Vec<char>) -> Vec<char> 
+fn incpass(s:&[char; 8], r:&mut [char; 8])
 {
+    let mut chars = [0u8; 8];
+    for i in 0..8 {
+        chars[i] = (s[i] as u8) - ('a' as u8);
+    }
     let mut i = s.len() - 1;
-    let mut chars : Vec<u8> = s.iter().clone().map(|c| (*c as u8) - ('a' as u8)).collect();
     loop {
         chars[i] += 1;
         match chars[i] {
@@ -61,31 +68,39 @@ fn incpass(s:&Vec<char>) -> Vec<char>
         i -= 1;
     }
 
-    return chars.iter().clone().map(|c| (c + ('a' as u8)) as char).collect();
+    for i in 0..8 {
+        r[i] = (chars[i] + ('a' as u8)) as char;
+    }
 }
 
-fn nextpass(s:&Vec<char>) -> Vec<char>
+fn nextpass(s:&mut [char; 8], r:&mut [char; 8])
 {
-    let mut n : Vec<char> = s.clone();
-    let mut x : Vec<char>;
+    let mut a = s;
+    let mut b = &mut ['0'; 8];
     loop {
-        x = incpass(&n);
-        if isvalid(&x) {
-            return x.clone();
+        incpass(a, &mut b);
+        if isvalid(b) {
+            for i in 0..8 {
+                r[i] = b[i];
+            }
+            return;
         }
-        n = x;
+        std::mem::swap(&mut a, &mut b);
     }
 }
 
 pub fn _run()
 {
-    let input : Vec<char> = "vzbxkghb".to_owned().chars().collect();
+    let input : ArrayVec<[char; 8]> = "vzbxkghb".to_owned().chars().collect();
+    let mut input_ar : [char; 8] = input.into_inner().unwrap();
+    let mut output_ar : [char; 8] = ['0'; 8];
 
-    let mut n = nextpass(&input);
+    nextpass(&mut input_ar, &mut output_ar);
 
-    println!("day11-1: {}", String::from_iter(n.iter()));
+    println!("day11-1: {}", String::from_iter(output_ar.iter()));
 
-    n = nextpass(&n);
+    let mut output_ar2 : [char; 8] = ['0'; 8];
+    nextpass(&mut output_ar, &mut output_ar2);
 
-    println!("day11-2: {}", String::from_iter(n.iter()));
+    println!("day11-2: {}", String::from_iter(output_ar2.iter()));
 }
