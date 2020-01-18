@@ -16,6 +16,7 @@ mod day09;
 mod day10;
 mod day11;
 mod day12;
+mod day13;
 mod day25;
 
 fn run_timer(f : fn()) -> Duration
@@ -45,8 +46,9 @@ fn main()
         Some(day10::_run),
         Some(day11::_run),
         Some(day12::_run),
+        Some(day13::_run),
 
-        None, None, None, None, None, None, None, None, None, None, None, None, None, 
+        None, None, None, None, None, None, None, None, None, None, None, None, 
 
         Some(day25::_run)
     ];
@@ -61,12 +63,12 @@ fn main()
             println!("  TOTAL: {:?}", total);
         }
         else {
-            let f = funcs[ args[1].parse::<usize>().expect("invalid arg!") ];
+            let f = funcs[ args[1].parse::<usize>().expect("invalid arg!") - 1 ];
             println!("Running Day {}", args[1]);
             run_timer(f.unwrap());
         }
     }
     else {
-        run_timer( day12::_run );
+        run_timer( day13::_run );
     }
 }
