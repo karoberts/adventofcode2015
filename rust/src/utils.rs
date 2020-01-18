@@ -41,6 +41,12 @@ pub fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>> 
     Ok(io::BufReader::new(file).lines())
 }
 
+/// gets a string out of a regex capture
+pub fn cap_to_string(cap: Option<regex::Match>) -> String
+{
+    cap.expect("capture doesn't exist").as_str().to_owned()
+}
+
 /// converts a regular expression capture to string and parses it, panics if there is a problem
 pub fn cap_to<T: std::str::FromStr>(cap: Option<regex::Match>) -> T 
 {
