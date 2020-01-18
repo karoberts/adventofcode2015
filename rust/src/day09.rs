@@ -11,26 +11,30 @@ fn tryit(fr:&String, tos:&mut TosType, mapping:&MappingType, totplaces:usize, p:
         return 0;
     }
 
-    let mut cs : Vec<i32> = vec!();
-    let mut tosp : TosType = fastset!();
+    let mut mincost = std::i32::MAX;
+    let mut maxcost = std::i32::MIN;
+    let mut found = false;
+
     for to in mapping.get(fr).unwrap() {
+        found = true;
         if tos.contains(&to.0) {
             continue;
         }
-        tosp.clear();
-        for v in tos.iter() {
-            tosp.insert(v.clone());
+        tos.insert(to.0.clone());
+        let r = to.1 + tryit(&to.0, tos, mapping, totplaces, p);
+        if p == 1 && r < mincost {
+            mincost = r;
         }
-        tosp.insert(to.0.clone());
-        let r = to.1 + tryit(&to.0, &mut tosp, mapping, totplaces, p);
-        cs.push(r);
+        else if p == 2 && r > maxcost {
+            maxcost = r;
+        }
+        tos.remove(&to.0);
     }
 
-    match cs.len() {
-        0 => 0,
-        1 => cs[0],
-        _ => if p == 1 { *cs.iter().min().unwrap() } else { *cs.iter().max().unwrap() } 
+    if !found {
+        return 0;
     }
+    if p == 1 { mincost } else { maxcost } 
 }
 
 pub fn _run()
@@ -58,16 +62,22 @@ pub fn _run()
 
     let totplaces = places.len();
 
-    let mut costs1 : utils::HashMapFnv<String, i32> = fastmap!();
-    let mut costs2 : utils::HashMapFnv<String, i32> = fastmap!();
+    let mut mincost = std::i32::MAX;
+    let mut maxcost = std::i32::MIN;
 
     for fr in mapping.keys() {
         let mut tos : TosType = fastset!();
         tos.insert(fr.clone());
-        costs1.insert(fr.clone(), tryit(&fr, &mut tos, &mapping, totplaces, 1));
-        costs2.insert(fr.clone(), tryit(&fr, &mut tos, &mapping, totplaces, 2));
+        let r1 = tryit(&fr, &mut tos, &mapping, totplaces, 1);
+        if r1 < mincost {
+            mincost = r1;
+        }
+        let r2 = tryit(&fr, &mut tos, &mapping, totplaces, 2);
+        if r2 > maxcost {
+            maxcost = r2;
+        }
     }
 
-    println!("day09-1: {}", costs1.values().min().unwrap());
-    println!("day09-2: {}", costs2.values().max().unwrap());
+    println!("day09-1: {}", mincost);
+    println!("day09-2: {}", maxcost);
 }
