@@ -19,6 +19,7 @@ mod day12;
 mod day13;
 mod day14;
 mod day15;
+mod day16;
 mod day25;
 
 fn run_timer(f : fn()) -> Duration
@@ -51,8 +52,9 @@ fn main()
         Some(day13::_run),
         Some(day14::_run),
         Some(day15::_run),
+        Some(day16::_run),
 
-        None, None, None, None, None, None, None, None, None, None, 
+        None, None, None, None, None, None, None, None, None, 
 
         Some(day25::_run)
     ];
@@ -73,6 +75,6 @@ fn main()
         }
     }
     else {
-        run_timer( day15::_run );
+        run_timer( day16::_run );
     }
 }
