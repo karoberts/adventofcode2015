@@ -2,6 +2,9 @@ use std::env;
 use std::time::{Instant, Duration};
 
 #[macro_use]
+extern crate lazy_static;
+
+#[macro_use]
 mod utils;
 
 mod day01;
@@ -21,6 +24,7 @@ mod day14;
 mod day15;
 mod day16;
 mod day17;
+mod day18;
 mod day25;
 
 fn run_timer(f : fn()) -> Duration
@@ -55,8 +59,9 @@ fn main()
         Some(day15::_run),
         Some(day16::_run),
         Some(day17::_run),
+        Some(day18::_run),
 
-        None, None, None, None, None, None, None, None, 
+        None, None, None, None, None, None, None, 
 
         Some(day25::_run)
     ];
@@ -77,6 +82,6 @@ fn main()
         }
     }
     else {
-        run_timer( day17::_run );
+        run_timer( day18::_run );
     }
 }
