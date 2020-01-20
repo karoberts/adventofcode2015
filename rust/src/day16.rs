@@ -35,21 +35,37 @@ pub fn _run()
         }
     }
 
+    let mut one_done = false;
     for i in 1..501 {
-        let mut _match = true;
         let sue = &sues[i];
+        let mut one_ok = true;
+        let mut two_ok = true;
         for (a, v) in analysis.iter() {
-            match sue.get(a) {
-                None => continue,
-                Some(x) => if x == v { continue; }
+            if !one_done && one_ok {
+                if sue.get(a).unwrap_or(v) != v {
+                    one_ok = false;
+                }
             }
-            _match = false;
-            break;
+            if two_ok {
+                match sue.get(a) {
+                    None => (),
+                    Some(x) => {
+                        match &a[..] {
+                            "cats" | "trees" => two_ok = x > v,
+                            "pomeranians" | "goldfish" => two_ok = x < v,
+                            _ => two_ok = x == v
+                        }
+                    }
+                }
+            }
         }
-        if _match {
+        if !one_done && one_ok {
             println!("day16-01: {}", i);
+            one_done = true;
+        }
+        if two_ok {
+            println!("day16-02: {}", i);
             break;
         }
     }
-
 }
