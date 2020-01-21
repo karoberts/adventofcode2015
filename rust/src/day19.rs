@@ -1,5 +1,45 @@
 use super::utils;
 
+fn recur(curmol:&String, steps:usize, min_steps:&mut usize, repls:&Vec<(&str,&str)>, done:&mut bool) -> usize 
+{
+    if curmol.find('e').is_some() || steps > *min_steps {
+        return 99999999;
+    }
+
+    let mut possibles : Vec<(usize, String)> = vec!();
+    for r in repls.iter() {
+        let pos = curmol.find(r.1);
+        if pos.is_none() {
+            continue;
+        }
+        let ppos = pos.unwrap();
+        let mut replaced : String = String::with_capacity(curmol.len() + r.0.len());
+        replaced.push_str(&curmol[..ppos]);
+        replaced.push_str(r.0);
+        replaced.push_str(&curmol[ppos+r.1.len()..]);
+
+        possibles.push((ppos, replaced));
+    }
+
+    let mut amts : Vec<usize> = vec!();
+    possibles.sort_by_key(|x| std::cmp::Reverse(x.0));
+    for p in possibles.iter() {
+        if p.1 == "e" {
+            *done = true;
+            return steps + 1;
+        }
+        else if p.1.len() <= curmol.len() {
+            let ret = recur(&p.1, steps + 1, min_steps, repls, done);
+            if *done {
+                return ret;
+            }
+            amts.push( ret );
+        }
+    }
+
+    return *amts.iter().min().unwrap_or(&99999999);
+}
+
 pub fn _run()
 {
     let repls = vec![
@@ -52,7 +92,7 @@ pub fn _run()
 
     let mut unique_results : utils::HashSetFnv<String> = fastset!();
 
-    for r in repls {
+    for r in repls.iter() {
         let mut pos = start.find(r.0);
         while pos.is_some() {
             let ppos = pos.unwrap();
@@ -70,4 +110,13 @@ pub fn _run()
     }
 
     println!("day19-1: {}", unique_results.len());
+
+    let mut sorted_repls = repls.clone();
+    sorted_repls.sort_by_key(|a| std::cmp::Reverse(a.1.len()));
+
+    let mut min_steps = start.len();
+    let mut done = false;
+
+    let steps = recur(&start.to_owned(), 0, &mut min_steps, &sorted_repls, &mut done);
+    println!("day19-2: {}", steps);
 }
