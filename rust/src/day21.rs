@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 struct Item
 {
     t: &'static str,
@@ -50,6 +51,7 @@ pub fn _run()
     ];
 
     let mut mincost = std::i32::MAX;
+    let mut maxcost = 0;
     for w in 0..weapons.len() {
         let my_weapon = weapons[w].damage.unwrap();
         for a in -1..armors.len() as i32 {
@@ -59,14 +61,20 @@ pub fn _run()
                 for r2 in -1..rings.len() as i32 {
                     let my_ring2 = if r2 == -1 {(0,0)} else {(rings[r2 as usize].damage.unwrap(), rings[r2 as usize].armor.unwrap())};
 
+                    let wcost = weapons[w].cost;
+                    let acost = if a == -1 {0} else {armors[a as usize].cost};
+                    let r1cost = if r1 == -1 {0} else {rings[r1 as usize].cost};
+                    let r2cost = if r2 == -1 {0} else {rings[r2 as usize].cost};
+                    let cost = wcost + acost + r1cost + r2cost;
+
                     if run_game(100, my_weapon + my_ring1.0 + my_ring2.0, my_armor + my_ring1.1 + my_ring2.1, 104, 8, 1) {
-                        let wcost = weapons[w].cost;
-                        let acost = if a == -1 {0} else {armors[a as usize].cost};
-                        let r1cost = if r1 == -1 {0} else {rings[r1 as usize].cost};
-                        let r2cost = if r2 == -1 {0} else {rings[r2 as usize].cost};
-                        let cost = wcost + acost + r1cost + r2cost;
                         if cost < mincost {
                             mincost = cost;
+                        }
+                    }
+                    else {
+                        if cost > maxcost {
+                            maxcost = cost;
                         }
                     }
                 }
@@ -75,4 +83,5 @@ pub fn _run()
     }
 
     println!("day21-1: {}", mincost);
+    println!("day21-2: {}", maxcost);
 }
