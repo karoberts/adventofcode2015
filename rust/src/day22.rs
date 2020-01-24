@@ -90,12 +90,12 @@ fn apply_spells(sp:&Item, me:&Item, boss:&Item, apply_hp_cost:bool, hp_turn_cost
 
     new_me.hp = Some(me.hp.unwrap() + sp.hp.unwrap_or(0));
     new_me.mana = Some(me.mana.unwrap() + sp.mana.unwrap_or(0));
-    new_me.armor = Some(me.armor.unwrap() + sp.armor.unwrap_or(0));
+    new_me.armor = sp.armor;
 
     new_boss.hp = Some(boss.hp.unwrap() - sp.damage.unwrap_or(0));
 
     if apply_hp_cost && hp_turn_cost > 0 {
-        new_me.hp = Some(new_me.hp.unwrap() + hp_turn_cost);
+        new_me.hp = Some(new_me.hp.unwrap() - hp_turn_cost);
     }
 
     (new_me, new_boss)
@@ -137,7 +137,7 @@ fn run_game(me:&Item, boss:&Item, next_spell:&Item, cur_spells:&SpellsType, cur_
     if new_boss.hp.unwrap_or(0) <= 0 {
         if cur_spend < *min_mana_win {
             *min_mana_win = cur_spend;
-            println!("new min {}", cur_spend);
+            //println!("new min 1 {}", cur_spend);
         }
         return;
     }
@@ -162,7 +162,7 @@ fn run_game(me:&Item, boss:&Item, next_spell:&Item, cur_spells:&SpellsType, cur_
     if new_boss.hp.unwrap_or(0) <= 0 {
         if new_cur_spend < *min_mana_win {
             *min_mana_win = new_cur_spend;
-            println!("new min {}", new_cur_spend);
+            //println!("new min 2 {}", new_cur_spend);
         }
         return;
     }
@@ -179,7 +179,7 @@ fn run_game(me:&Item, boss:&Item, next_spell:&Item, cur_spells:&SpellsType, cur_
     if new_boss.hp.unwrap_or(0) <= 0 {
         if new_cur_spend < *min_mana_win {
             *min_mana_win = new_cur_spend;
-            println!("new min {}", new_cur_spend);
+            //println!("new min 3 {}", new_cur_spend);
         }
         return;
     }
@@ -214,10 +214,23 @@ pub fn _run()
     let mut min_mana_win = std::i32::MAX;
 
     for next_sp in spells.iter() {
-        println!("starting with {}", next_sp.t);
+        //println!("starting with {}", next_sp.t);
         let cur_spells = fastmap!();
         run_game(&mut me, &mut boss, &next_sp, &cur_spells, 0, 0, &mut min_mana_win, hp_turn_cost, &spells);
     }
 
     println!("day22-1: {}", min_mana_win);
+
+    me = Item {t: "me", hp: Some(50), mana: Some(500), armor: Some(0), damage: Some(0), cost:0, timer:None};
+    boss = Item {t: "boss", hp: Some(55), mana: None, armor: Some(0), damage: Some(8), cost:0, timer:None};
+    hp_turn_cost = 1;
+    min_mana_win = std::i32::MAX;
+
+    for next_sp in spells.iter() {
+        //println!("starting with {}", next_sp.t);
+        let cur_spells = fastmap!();
+        run_game(&mut me, &mut boss, &next_sp, &cur_spells, 0, 0, &mut min_mana_win, hp_turn_cost, &spells);
+    }
+
+    println!("day22-2: {}", min_mana_win);
 }
