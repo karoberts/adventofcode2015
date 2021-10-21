@@ -183,7 +183,7 @@ fn read_input(wires: &mut WireMap, inputs: &mut InputMap, ops: &mut OpMap)
             continue;
         }
 
-        panic!(format!("didn't match {}", line));
+        panic!("didn't match {}", line);
     }
 }
 

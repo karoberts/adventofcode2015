@@ -66,7 +66,7 @@ pub fn _run()
             continue;
         }
 
-        panic!(format!("didn't match {}", line));
+        panic!("didn't match {}", line);
     }
 
     let mut part1 = 0;
