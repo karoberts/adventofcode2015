@@ -4,8 +4,8 @@ use super::utils;
 
 const D: usize = 1000;
 
-type TGrid1 = [[bool; D]; D];
-type TGrid2 = [[i32; D]; D];
+type TGrid1 = Vec<[bool; D]>;
+type TGrid2 = Vec<[i32; D]>;
 
 fn apply(grid1:&mut TGrid1, grid2:&mut TGrid2, cap:&regex::Captures, mode:&str)
 {
@@ -43,8 +43,18 @@ pub fn _run()
     let pat2 = Regex::new(r"^toggle (\d+),(\d+) through (\d+),(\d+)$").unwrap();
     let pat3 = Regex::new(r"^turn off (\d+),(\d+) through (\d+),(\d+)$").unwrap();
 
-    let mut map1 = [[false; D] ; D];
-    let mut map2 = [[0i32; D] ; D];
+    // too big for stack
+    //let mut map1 = [[false; D] ; D];
+    //let mut map2 = [[0i32; D] ; D];
+
+    let mut map1 : TGrid1 = vec!();
+    for _ in 0..D {
+        map1.push([false; D]);
+    }
+    let mut map2 : TGrid2 = vec!();
+    for _ in 0..D {
+        map2.push([0i32; D]);
+    }
 
     let lines = utils::read_lines("../06.txt").expect("06.txt");
     for line in lines.map(|s| s.expect("fail")) {
@@ -81,6 +91,6 @@ pub fn _run()
         }
     }
 
-    println!("day05-1: {}", part1);
-    println!("day05-2: {}", part2);
+    println!("day06-1: {}", part1);
+    println!("day06-2: {}", part2);
 }

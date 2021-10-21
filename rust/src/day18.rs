@@ -2,7 +2,7 @@ use super::utils;
 
 const D: usize = 1000;
 
-type TGrid = [[bool; D]; D];
+type TGrid = Vec<[bool; D]>;
 
 fn get_state(grid:&TGrid, x:i32, y:i32) -> bool {
     if x < 0 || y < 0 || x > 99 || y > 99 {
@@ -62,12 +62,24 @@ fn count_all(grid:&TGrid) -> i32
     co
 }
 
+fn fill(v : &mut TGrid)
+{
+    for _ in 0..D {
+        v.push([false; D]);
+    }
+}
+
 pub fn _run()
 {
     let lines = utils::read_lines("../18.txt").expect("18.txt");
 
-    let mut grid1 = [[false; D] ; D];
-    let mut grid2 = [[false; D] ; D];
+    // too big for stack
+    //let mut grid1 = [[false; D] ; D];
+    //let mut grid2 = [[false; D] ; D];
+    let mut grid1 : TGrid = vec!();
+    let mut grid2 : TGrid = vec!();
+    fill(&mut grid1);
+    fill(&mut grid2);
 
     for (y, line) in lines.map(|x| x.unwrap()).enumerate() {
         for (x, c) in line.chars().enumerate() {
@@ -76,8 +88,12 @@ pub fn _run()
         }
     }
 
-    let mut nextgrid1 = [[false; D] ; D];
-    let mut nextgrid2 = [[false; D] ; D];
+    //let mut nextgrid1 = [[false; D] ; D];
+    //let mut nextgrid2 = [[false; D] ; D];
+    let mut nextgrid1 : TGrid = vec!();
+    let mut nextgrid2 : TGrid = vec!();
+    fill(&mut nextgrid1);
+    fill(&mut nextgrid2);
 
     for _ in 1..101 {
         cycle(&grid1, &mut nextgrid1, 1);
